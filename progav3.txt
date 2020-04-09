@@ -1,0 +1,17 @@
+#include<stdio.h>
+
+int main (void)
+{
+	return 0;
+}
+
+char InvertirCaden (char *CadenaAInvertir)
+{
+	char Invertida[20]={0};s
+	int sizecadena = 0;
+	while(*CadenaAInvertir)
+	{	
+		sizecadena++;
+		CadenaAInvertir++;
+	}
+}

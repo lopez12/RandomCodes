@@ -1,0 +1,115 @@
+Sub Espacios()
+'La funcion espacios es utilizada para poner espacios entre los brincos de hora generados
+'Desarrollo para Secretaria del Medio Ambiente por Arturo Sacramento Lopez Gonzalez
+'Fecha: 03/02/2014 01:51:00 p.m. Version 1.0 Alpha
+    
+    Dim shora As String         'Apendix 1.0
+    Dim diferencia As Integer   'Apendix 1.1
+    Dim shoracmp As String      'Apendix 1.2
+    Dim ihora As Integer        'Apendix 1.3
+    Dim ihoracmp As Integer     'Apendix 1.4
+    
+    'Se definieron la variables de ambiente la cuales no se vistas por el usuario final
+    'pero son necesarias para el control de diferentes parametros internos del programa
+    '
+    'Apendix 1.0 shora
+    '   Esta es una variable de tipo string (cadena) en la que se guardara la hora
+    '   arrojada por la hoja de excel y que es de tipo de cadena
+    'Apendix 1.1 diferencia
+    '   Esta variable fue definida para encontrar la diferencia entre la hora actual
+    '   y la hora que le sigue para saber cuantos espacios va a dejar en medio
+    'Apendix 1.2 shoracmp
+    '   Esta variable es de tipo string y es la hora a comparar (s=string hora cmp=comparar)
+    '   y es en la que guardamos el valor de la siguiente celda como una cadena
+    'Apendix 1.3 ihora
+    '   En esta variable de tipo entera (integer) se va a convertir de tipo cadena, recibida
+    '   por el excel y la convertira a un tipo entera para poder hacer la comparacion
+    'Apendix 1.4 ihoracmop
+    '   En esta variable se va a guardad la variable con la que se va a comparar pero ya
+    '   como una de tipo entero (i=entero)
+    
+    
+    diferencia = 0 'definimos la diferencia como 0 para tenerla inicializada
+    Final = Range("B65536").End(xlUp).Row
+    'Se busca el final de la hoja en donde se encuentran los datos
+    
+    For x = 2 To Final
+        shora = Left(Cells(x, 5), 2)            'Apendix 2.0
+        shoracmp = Left(Cells(x + 1, 5), 2)     'Apendix 2.1
+        ihora = CInt(shora)                     'Apendix 2.2
+        ihoracmp = CInt(shoracmp)               'Apendix 2.3
+            If (ihora + 1 = ihoracmp) Or (ihora = 12 And ihoracmp = 1) Then     'Apendix 3.0
+                'todo esta bien
+            ElseIf ihora > ihoracmp Then                                        'Apendix 3.1
+                diferencia = (12 - ihora) + (ihoracmp) - 1                      'Apendix 3.2
+            ElseIf ihoracmp > ihora Then                                        'Apendix 3.3
+                diferencia = ihoracmp - ihora                                   'Apendix 3.4
+            End If
+        y = 0                                                  'Igualamos a "y" a 0
+            While diferencia > 0                               'Apendix 4.1
+                Rows(x + 1).Insert
+                diferencia = diferencia - 1
+                x = x + 1
+                y = y + 1
+                Cells(x, 5).Value = (ihora + y) & ":00:00"
+            Wend    'Fin del while
+    'Esta parte es el cerebro total de la funcion en la cual dejaremos los espacios para las horas faltantes
+    '
+    'Apendix 2.0
+    '   En esta parte del codigo se va a tomar la hora, la cual se encuentra en los primero
+    '   dos digitos de la celda 5 (solo las horas)
+    'Apendix 2.1
+    '   Se tomara tambien los primeros dos valores de la siguiente celda en la columna ya que
+    '   esta representa la siguiente hora y es con la que vamos a comparar
+    'Apendix 2.2
+    '   Ahora guardaremos los datos como enteros, ya que cuando tomamos los datos sin procesar
+    '   a las macros nos dimos cuenta que las toma como una cadena y no como el valor de entero
+    '   ej: cuando se escribes "7" en una celda y lo pasas a la macro, no se toma como un 7 sino
+    '   como un 55 que es su valor en ASCII y es por eso que se debe convertir a entero
+    'Apendix 2.3
+    '   Con la funcion CInt es con la que hacemos el cambio mencionado en el apendice anterior y
+    '   Se lo aplicamos tanto al valor de la celda actual tanto como al valor de la celda siguiente
+    '   y lo metemos a las nueva variables para poder usarlas
+    '
+    '
+    'Apendix 3.0
+    '   Estas son las comparaciones para saber si el valor siguiente es correcto o si es necesario
+    '   dejar espacios en blanco porque faltan horas. La primera comparacion es saber si la hora
+    '   actual más uno es igual a la siguiente celda lo cual seria lo ideal ej: si son las 10 lo
+    '   ideal es que la siguiente hora sean las 11 y si 10+1=11 entonces vamos bien. Otro caso especial
+    '   es el de las 12, ya que despues de las 12 sigue la 1 pero 12+1 no es igual a 1, por lo tanto la
+    '   condicion incorrecta, es pro eso que ya sea que se cumpla la primera condicion "O" que si son
+    '   las 12 y la siguiente posicion sea la 1 entonces todo esta bien
+    'Apendix 3.1
+    '   Si la primera condicion no se cumplio significa que existe un problema y que hay que agregar
+    '   espacios. La pregunta importante es cuantos espacios se deben de agregar, para esto debemos
+    '   tomar a consideracion que se pueden existir brincos de horas entre la tarde y la madrugada
+    '   Esto significaria que si estamos en una hora anterior a las 12 y pasamos a una hora posterior
+    '   A las 12 se tendria que hacer que ver cuantas horas absolutas existe de una hora a otra
+    '   Si la hora actual es mayor a la hora que sigue significa que brinco de la tarde a la madrugada
+    '   ej: si son las 8pm y la siguiente hora son las 3am no puedo tomar decir que la diferencia entre ellos
+    '   es 8-3 o alguna operacion matematica
+    'Apendix 3.2
+    '   Para casos en especificos como este se toma la diferencia que existe de la hora actual
+    '   a las 12 ej: 12-8 lo cual seria 5 y para llegar a las 3 solo harian falta 3 horas mas
+    '   por lo tanto la diferencia es (12-8)+3 y por eso se utiliza esa formula
+    'Apendix 3.3
+    '   El otro caso es que ambas se encuentren antes de las 12 que es la hora de brinco
+    '   entonces la hora a comparar seria mas grande que la hora actual ej: 3 y 8
+    'Apendix 3.4
+    '   Significa que la diferencia entre estos dos parametros es una simple resta del numero
+    '   a comprar con el actual
+    '
+    '
+    'Apendix 4.0
+    '   Esta parte del codigo es simplemente, ya sabida la diferencia entre las horas, en la fila
+    '   en la que estamos vamoa a agregar una fila mas le quitamos uno al valor de diferencia
+    '   la cual es nuestra variable que sabe cuantos espacios hay. Luego ponemos en esta
+    '   celda creada el valor de la hora que hacia falta la cual es igual a nuestra hora actual
+    '   mas una variable "y" que se va incrementando por cada brinco y es borrada una vez que
+    '   se quitaron los brincos consecutivos.
+    
+    
+    Next x  'Brinco del For
+    
+End Sub 'Fin de la funcion

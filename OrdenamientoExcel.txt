@@ -1,0 +1,38 @@
+Sub Ordenamiento()
+'la funcion ordenamiento es utilizada para separa el dia de las horas
+'Desarrollo para Secretaria del Medio Ambiente por Arturo Sacramento Lopez Gonzalez
+'Fecha: 03/02/2014 01:51:00 p.m. Version 1.0 Alpha
+
+    Final = Range("B65536").End(xlUp).Row
+    'Esta parte del codigo se lleno la variable "Final" en donde fuimos
+    'hasta el final de la posible hoja de datos y verifica su valor para
+    'ver cual es el ultimo dato de la base de datos
+    
+    Columns(4).Insert   'Antes que nada se insertara una nueva columna para poner lo datos
+    For x = 2 To Final
+    Cells(x, 4) = Left(Cells(x, 2), 10)
+    Next
+    'Este for es un ciclo en el que vamos celda por celda de toda la columna y
+    'los primero 10 digitos de la izquierda de la columna 2, se pondran como valor
+    'designado en la columna 4 los cuales son equivalente a el dia ej:20/10/2015
+    
+    Columns(5).Insert   'Ahora insertamos una columna 5 para la hora
+    For x = 2 To Final
+    Cells(x, 5) = Mid(Cells(x, 2), 12, 14)
+    If Cells(x, 5) = vbNullString Then  'Apendix 1.0
+       Cells(x, 5) = "12:00:00 a. m."
+    End If
+    'Ahora repetiremos el procedimiento anterior pero tomaremos de la columna 2
+    'el valor que tiene la hora, la cual se encuentra en la en los ultimos 14 digitos
+    'ej: 12:00:00 a. m.
+    'Estos se pondran en la columna 5
+    '
+    'Apendix 1.0
+    '   En caso de que ya pasados los primero 12 datos de la columna 2 (osease el dia)
+    '   y no existan más valores (cosa que se da en el inicio de un nuevo dia
+    '   se pondra la hora 12:00:00 a. m. la cual indica el inicio de un nuevo dia
+    
+    Next    'brinco del for
+    
+End Sub 'Fin del codigo
+

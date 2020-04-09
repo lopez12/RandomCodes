@@ -1,0 +1,18 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+#include<windows.h>
+
+int main (void)
+
+{
+	int Barra[40]={0};
+	
+	system("cls");
+	
+	gotoxy(0,0);
+	printf("%c",2);
+
+	return 0;
+
+}
